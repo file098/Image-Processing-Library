@@ -14,6 +14,8 @@
 #define FLT_MIN 1.175494351e-38F /* min positive value */
 #define PI 3.141592654
 
+prova; 
+
 typedef struct{
     float min;
     float max;
