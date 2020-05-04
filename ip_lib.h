@@ -36,10 +36,17 @@ typedef struct {
 ip_mat * ip_mat_create(unsigned int h, unsigned int w,unsigned  int k, float v){
     int i,j,z;
     ip_mat *new_ip_mat;
+    stats * newstats;
 
     (*new_ip_mat).h = h;
     (*new_ip_mat).w = w;
     (*new_ip_mat).k = k;
+
+    (*newstats).min = v;
+    (*newstats).max = v;
+    (*newstats).mean = v;
+
+    (*new_ip_mat).stat = newstats;
 
     float ***mat3D = (float ***)malloc(h * w * k * sizeof(float **));
 
