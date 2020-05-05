@@ -61,7 +61,7 @@ ip_mat * ip_mat_create(unsigned int h, unsigned int w,unsigned  int k, float v){
         }
     }
     (*new_ip_mat).data = mat3D;
-    
+
     free(newstats);
 
     return new_ip_mat;
@@ -117,6 +117,9 @@ ip_mat * ip_mat_subset(ip_mat * t, unsigned int row_start, unsigned int row_end,
  *      out.w = a.w = b.w
  *      out.k = a.k + b.k
  * */
+
+
+/*Il parametro dimensione indica su quale dimensione vado a modificare il valore*/
 ip_mat * ip_mat_concat(ip_mat * a, ip_mat * b, int dimensione);
 
 /**** PARTE 1: OPERAZIONI MATEMATICHE FRA IP_MAT ****/
