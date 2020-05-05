@@ -61,6 +61,8 @@ ip_mat * ip_mat_create(unsigned int h, unsigned int w,unsigned  int k, float v){
         }
     }
     (*new_ip_mat).data = mat3D;
+    
+    free(newstats);
 
     return new_ip_mat;
 }
