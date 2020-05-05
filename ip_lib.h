@@ -36,7 +36,8 @@ typedef struct {
 ip_mat * ip_mat_create(unsigned int h, unsigned int w,unsigned  int k, float v){
     int i,j,z;
     ip_mat *new_ip_mat;
-    stats * newstats;
+    
+    stats * newstats = (stats *)malloc(sizeof(stats));
 
     (*new_ip_mat).h = h;
     (*new_ip_mat).w = w;
@@ -80,6 +81,8 @@ void compute_stats(ip_mat * t);
 
 /* Inizializza una ip_mat con dimensioni w h e k.
  * Ogni elemento è generato da una gaussiana con media mean e varianza var */
+
+/*rimpiazzo ogni elemento della matrice con valori genreati da una funzione gaussiana*/
 void ip_mat_init_random(ip_mat * t, float mean, float var);
 
 /* Crea una copia di una ip_mat e lo restituisce in output */
@@ -204,7 +207,7 @@ void rescale(ip_mat * t, float new_max);
 /* Nell'operazione di clamping i valori <low si convertono in low e i valori >high in high.*/
 void clamp(ip_mat * t, float low, float high);
 
-/**** METODI GIA' IMPLEMENTATI ****/
+/**** TODO: METODI GIA' IMPLEMENTATI ****/
 /* Genera dei numeri casuali con distribuzione Normale (versione base)
  * https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform
  * */
