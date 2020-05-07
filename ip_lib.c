@@ -150,3 +150,87 @@ void ip_mat_free(ip_mat *a){
     free(a->stat);
     free(a);
 }
+
+
+
+
+ip_mat * ip_mat_create(unsigned int h, unsigned int w,unsigned  int k, float v) {
+    ip_mat *new_ip_mat;
+    int i,j,p;
+
+    new_ip_mat=(ip_mat *)malloc(sizeof(ip_mat));
+
+    new_ip_mat->h=h;
+    new_ip_mat->w=w;
+    new_ip_mat->k=k;
+
+    new_ip_mat->stat=(stats *)malloc(sizeof(stats)*k);
+    for (i=0;i<k;i++) {
+        new_ip_mat->stat[i].max=v;
+        new_ip_mat->stat[i].min=v;
+        new_ip_mat->stat[i].mean=v;
+    }
+
+
+    new_ip_mat->data=(float ***)malloc(sizeof(float **)*h);
+    for (i=0;i<h;i++) {
+        (new_ip_mat->data)[i]=(float **)malloc(sizeof(float*)*w);
+        for (j=0;j<w;j++) {
+            (new_ip_mat->data)[i][j]=(float *)malloc(sizeof(float)*k);
+            for (p=0;p<k;p++) {
+                (new_ip_mat->data)[i][j][p]=v;
+            }
+        }
+    }
+    return new_ip_mat;
+}
+
+void ip_mat_free(ip_mat *a){
+    int i;
+    int j;
+    
+    for(i=0;i<a->h;i++) {
+        for(j=0;j<a->w;j++) {
+            free(a->data[i][j]);
+        }
+        free(a->data[i]);
+    }
+    free(a->data);
+    free(a->stat);
+    free(a);
+}
+
+/* Calcola il valore minimo, il massimo e la media per ogni canale
+ * e li salva dentro la struttura ip_mat stats
+ * */
+void compute_stats(ip_mat * t) {
+    int i,j,m;
+    int count = 0;
+    float max, min;
+    float tot = 0;
+
+    max = t->data[0][0][0];
+    min = t->data[0][0][0];
+
+    for (m=0;m<t->k;m++) {
+        for (i=0;i<t->h;i++) {
+            for (j=0;j<t->w;j++) {
+                if (t->data[j][i][m] > max) 
+                    max = t->data[j][i][m];
+
+                if (t->data[j][i][m] < max) 
+                    min = t->data[j][i][m];
+
+                count++;
+
+                tot += t->data[j][i][m];
+            }
+        }
+    }
+
+    tot = tot/(1.0 * count);
+
+    t->stat->max = max;
+    t->stat->min = min;
+    t->stat->mean = tot;
+}
