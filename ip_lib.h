@@ -33,39 +33,7 @@ typedef struct {
 /* Inizializza una ip_mat con dimensioni h w e k. Ogni elemento è inizializzato a v.
  * Inoltre crea un vettore di stats per contenere le statische sui singoli canali.
  * */
-ip_mat * ip_mat_create(unsigned int h, unsigned int w,unsigned  int k, float v){
-    int i,j,z;
-    ip_mat *new_ip_mat;
-    
-    stats * newstats = (stats *)malloc(sizeof(stats));
-
-    (*new_ip_mat).h = h;
-    (*new_ip_mat).w = w;
-    (*new_ip_mat).k = k;
-
-    (*newstats).min = v;
-    (*newstats).max = v;
-    (*newstats).mean = v;
-
-    (*new_ip_mat).stat = newstats;
-
-    float ***mat3D = (float ***)malloc(h * w * k * sizeof(float **));
-
-    for(i=0; i< h; i++){
-        mat3D[i] = (float **)malloc(sizeof(float **) * w * k);
-        for(j=0; j < w; j++){
-            mat3D[i][j] = (float*)malloc(sizeof(float *) * k);
-            for(z=0; z < k; z++){
-                mat3D[i][j][z] = v;
-            }
-        }
-    }
-    (*new_ip_mat).data = mat3D;
-
-    free(newstats);
-
-    return new_ip_mat;
-}
+ip_mat * ip_mat_create(unsigned int h, unsigned int w,unsigned  int k, float v);
 
 /* Libera la memoria (data, stat e la struttura) */
 void ip_mat_free(ip_mat *a);
