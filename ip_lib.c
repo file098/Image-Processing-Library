@@ -104,7 +104,6 @@ ip_mat * ip_mat_create(unsigned int h, unsigned int w,unsigned  int k, float v){
     int i,j,z;
     ip_mat *new_ip_mat;
     
-    
     stats * newstats = (stats *)malloc(sizeof(stats)*k);
 
     (*new_ip_mat).h = h;
@@ -133,4 +132,21 @@ ip_mat * ip_mat_create(unsigned int h, unsigned int w,unsigned  int k, float v){
     free(newstats);
 
     return new_ip_mat;
+}
+
+
+void ip_mat_free(ip_mat *a){
+    int i,j;
+
+    /* Free della matrice*/
+    for(i=0;i<a->h;i++){
+        for(int j=0;j<a->w;j++){
+            free(a->data[i][j]);
+        }
+        free(a->data[i]);
+    }
+    
+    free(a->data);
+    free(a->stat);
+    free(a);
 }
