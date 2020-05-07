@@ -71,9 +71,11 @@ ip_mat * ip_mat_create(unsigned int h, unsigned int w,unsigned  int k, float v){
 void ip_mat_free(ip_mat *a);
 
 /* Restituisce il valore in posizione i,j,k */
+/* gia implementata*/
 float get_val(ip_mat * a, unsigned int i,unsigned int j,unsigned int k);
 
 /* Setta il valore in posizione i,j,k a v*/
+/* gia implementata*/
 void set_val(ip_mat * a, unsigned int i,unsigned int j,unsigned int k, float v);
 
 /* Calcola il valore minimo, il massimo e la media per ogni canale
