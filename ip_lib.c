@@ -188,3 +188,108 @@ void compute_stats(ip_mat * t) {
 void ip_mat_init_random(ip_mat * t, float mean, float var){
 
 }
+
+/**** PARTE 1: OPERAZIONI MATEMATICHE FRA IP_MAT ****/
+/* Esegue la somma di due ip_mat (tutte le dimensioni devono essere identiche)
+ * e la restituisce in output. */
+ip_mat * ip_mat_sum(ip_mat * a, ip_mat * b){
+    ip_mat *new_ip_mat;
+    int i,j,z;
+    new_ip_mat = ip_mat_create(a->w,a->h,a->k,0.0);
+
+    if(a->h != b->h || a->w != b->w || a->k != b->k){
+        printf("Error, ip_mat a and b are not the same size");
+    }
+    else{
+        for(i=0;i<a->w;i++){
+            for(j=0;j<a->h;j++){
+                for(z=0;z<a->k;z++){
+                    new_ip_mat->data[i][j][z] = a->data[i][j][z] + b->data[i][j][z];
+                }
+            }
+        }
+        compute_stats(new_ip_mat);
+    }
+    return new_ip_mat;
+}
+
+/* Esegue la sottrazione di due ip_mat (tutte le dimensioni devono essere identiche)
+ * e la restituisce in output.
+ * */
+ip_mat * ip_mat_sub(ip_mat * a, ip_mat * b){
+    ip_mat *new_ip_mat;
+    int i,j,z;
+    new_ip_mat = ip_mat_create(a->w,a->h,a->k,0.0);
+
+    if(a->h != b->h || a->w != b->w || a->k != b->k){
+        printf("Error, ip_mat a and b are not the same size");
+    }
+    else{
+        for(i=0;i<a->w;i++){
+            for(j=0;j<a->h;j++){
+                for(z=0;z<a->k;z++){
+                    new_ip_mat->data[i][j][z] = a->data[i][j][z] - b->data[i][j][z];
+                }
+            }
+        }
+        compute_stats(new_ip_mat);
+    }
+    return new_ip_mat;
+}
+
+/* Moltiplica un ip_mat per uno scalare c. Si moltiplica c per tutti gli elementi di "a"
+ * e si salva il risultato in un nuovo tensore in output. */
+ip_mat * ip_mat_mul_scalar(ip_mat *a, float c){
+        ip_mat *new_ip_mat;
+    int i,j,z;
+    new_ip_mat = ip_mat_create(a->w,a->h,a->k,0.0);
+
+    for(i=0;i<a->w;i++){
+        for(j=0;j<a->h;j++){
+            for(z=0;z<a->k;z++){
+                new_ip_mat->data[i][j][z] *= c;
+            }
+        }
+    }
+    compute_stats(new_ip_mat);
+    return new_ip_mat;
+}
+
+/* Aggiunge ad un ip_mat uno scalare c e lo restituisce in un nuovo tensore in output. */
+ip_mat *  ip_mat_add_scalar(ip_mat *a, float c){
+    ip_mat *new_ip_mat;
+    int i,j,z;
+    new_ip_mat = ip_mat_create(a->w,a->h,a->k,0.0);
+
+    for(i=0;i<a->w;i++){
+        for(j=0;j<a->h;j++){
+            for(z=0;z<a->k;z++){
+                new_ip_mat->data[i][j][z] += c;
+            }
+        }
+    }
+    compute_stats(new_ip_mat);
+    return new_ip_mat;
+}
+
+/* Calcola la media di due ip_mat a e b e la restituisce in output.*/
+ip_mat * ip_mat_mean(ip_mat * a, ip_mat * b){
+    ip_mat *new_ip_mat;
+    int i,j,z;
+    new_ip_mat = ip_mat_create(a->w,a->h,a->k,0.0);
+
+    if(a->h != b->h || a->w != b->w || a->k != b->k){
+        printf("Error, ip_mat a and b are not the same size");
+    }
+    else{
+        for(i=0;i<a->w;i++){
+            for(j=0;j<a->h;j++){
+                for(z=0;z<a->k;z++){
+                    new_ip_mat->data[i][j][z] = (a->data[i][j][z] + b->data[i][j][z])/2.0;
+                }
+            }
+        }
+        compute_stats(new_ip_mat);
+    }
+    return new_ip_mat;
+}
