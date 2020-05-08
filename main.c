@@ -7,8 +7,7 @@
 int main(){
 
     ip_mat * mat = ip_mat_create(2,2,2,2);
-    get_val(mat,2,2,2);
-    set_val(mat,2,2,2,1);
-    printf("%f",mat->data[2][2][2]);
+    get_val(mat,1,1,1);
+    printf("%f",mat->data[0][0][0]);
     return 0;
 }
