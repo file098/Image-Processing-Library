@@ -6,13 +6,11 @@
 
 int main(){
 
-    ip_mat * mat = ip_mat_create(2,2,2,2);
+    ip_mat * mat = ip_mat_create(2,2,3,0);
     get_val(mat,1,1,1);
-    set_val(mat,1,1,1,5);
+    set_val(mat,1,1,2,5);
     compute_stats(mat);
-    printf("max:%f\n",mat->stat->max);
-    printf("min:%f\n",mat->stat->min);
-    printf("mean:%f\n",mat->stat->mean);
-    
+    ip_mat_show(mat);
+    ip_mat_show_stats(mat);
     return 0;
 }

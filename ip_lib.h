@@ -182,7 +182,7 @@ void rescale(ip_mat * t, float new_max);
 /* Nell'operazione di clamping i valori <low si convertono in low e i valori >high in high.*/
 void clamp(ip_mat * t, float low, float high);
 
-/**** TODO: METODI GIA' IMPLEMENTATI ****/
+/**** METODI GIA' IMPLEMENTATI ****/
 /* Genera dei numeri casuali con distribuzione Normale (versione base)
  * https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform
  * */

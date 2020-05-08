@@ -7,3 +7,6 @@ runMain:
 
 clean:
 	rm testMain
+
+memCheck:
+	valgrind -v --leak-check=full ./testMain
