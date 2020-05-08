@@ -9,5 +9,6 @@ int main(){
     ip_mat * mat = ip_mat_create(2,2,2,2);
     get_val(mat,2,2,2);
     set_val(mat,2,2,2,1);
+    printf("%f",mat->data[2][2][2]);
     return 0;
 }

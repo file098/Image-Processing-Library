@@ -1,5 +1,4 @@
-provastack: principale.o
-	gcc --ansi --pedantic -ggdb main.o -omain
-
-principale.o: main.c ip_lib.h
-	gcc -c --ansi --pedantic -ggdb main.c -omain.o
+runMainTest:
+	gcc ip_lib.c -o ip_lib.o -Wall -c
+	gcc main.c bmp.o ip_lib.o -o testMyMain -Wall -lm
+	./testMain

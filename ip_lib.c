@@ -100,60 +100,6 @@ float get_normal_random(){
 
 }
 
-ip_mat * ip_mat_create(unsigned int h, unsigned int w,unsigned  int k, float v){
-    int i,j,z;
-    ip_mat *new_ip_mat;
-    
-    stats * newstats = (stats *)malloc(sizeof(stats)*k);
-
-    (*new_ip_mat).h = h;
-    (*new_ip_mat).w = w;
-    (*new_ip_mat).k = k;
-
-    (*newstats).min = v;
-    (*newstats).max = v;
-    (*newstats).mean = v;
-
-    (*new_ip_mat).stat = newstats;
-
-    float ***mat3D = (float ***)malloc(h * sizeof(float **));
-
-    for(i=0; i< h; i++){
-        mat3D[i] = (float **)malloc(sizeof(float *) * w);
-        for(j=0; j < w; j++){
-            mat3D[i][j] = (float *)malloc(sizeof(float) * k);
-            for(z=0; z < k; z++){
-                mat3D[i][j][z] = v;
-            }
-        }
-    }
-    (*new_ip_mat).data = mat3D;
-
-    free(newstats);
-
-    return new_ip_mat;
-}
-
-
-void ip_mat_free(ip_mat *a){
-    int i,j;
-
-    /* Free della matrice*/
-    for(i=0;i<a->h;i++){
-        for(int j=0;j<a->w;j++){
-            free(a->data[i][j]);
-        }
-        free(a->data[i]);
-    }
-    
-    free(a->data);
-    free(a->stat);
-    free(a);
-}
-
-
-
-
 ip_mat * ip_mat_create(unsigned int h, unsigned int w,unsigned  int k, float v) {
     ip_mat *new_ip_mat;
     int i,j,p;
@@ -233,4 +179,12 @@ void compute_stats(ip_mat * t) {
     t->stat->max = max;
     t->stat->min = min;
     t->stat->mean = tot;
+}
+
+/* Inizializza una ip_mat con dimensioni w h e k.
+ * Ogni elemento è generato da una gaussiana con media mean e varianza var */
+
+/*rimpiazzo ogni elemento della matrice con valori genreati da una funzione gaussiana*/
+void ip_mat_init_random(ip_mat * t, float mean, float var){
+
 }
