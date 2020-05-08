@@ -247,7 +247,7 @@ ip_mat * ip_mat_mul_scalar(ip_mat *a, float c){
     for(i=0;i<a->w;i++){
         for(j=0;j<a->h;j++){
             for(z=0;z<a->k;z++){
-                new_ip_mat->data[i][j][z] *= c;
+                new_ip_mat->data[i][j][z] = a->data[i][j][z] * c;
             }
         }
     }
@@ -264,7 +264,7 @@ ip_mat *  ip_mat_add_scalar(ip_mat *a, float c){
     for(i=0;i<a->w;i++){
         for(j=0;j<a->h;j++){
             for(z=0;z<a->k;z++){
-                new_ip_mat->data[i][j][z] += c;
+                new_ip_mat->data[i][j][z] = a->data[i][j][z] + c;
             }
         }
     }
