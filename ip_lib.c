@@ -151,7 +151,7 @@ void ip_mat_free(ip_mat *a){
  * */
 void compute_stats(ip_mat * t) {
     int i,j,m;
-    int count = 0;
+    float count = 0.0;
     float max, min;
     float tot = 0;
 
