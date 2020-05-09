@@ -3,6 +3,8 @@
 */
 //baka
 
+//taoooooooooo
+
 #include <stdio.h>
 #include "ip_lib.h"
 #include "bmp.h"
