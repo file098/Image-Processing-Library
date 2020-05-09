@@ -2,8 +2,7 @@
  Created by Sebastiano Vascon on 23/03/20.
 */
 
-//taoooooooooo
-
+#include <assert.h>
 #include <stdio.h>
 #include "ip_lib.h"
 #include "bmp.h"
@@ -312,16 +311,5 @@ ip_mat * ip_mat_mean(ip_mat * a, ip_mat * b){
     return new_ip_mat;
 }
 
-
 /*Il parametro dimensione indica su quale dimensione vado a modificare il valore*/
 ip_mat * ip_mat_concat(ip_mat * a, ip_mat * b, int dimensione);
-
-
-/* Restituisce una sotto-matrice, ovvero la porzione individuata da:
- * t->data[row_start...row_end][col_start...col_end][0...k]
- * La terza dimensione la riportiamo per intero, stiamo in sostanza prendendo un sottoinsieme
- * delle righe e delle colonne.
- * */
-ip_mat * ip_mat_subset(ip_mat * t, unsigned int row_start, unsigned int row_end, unsigned int col_start, unsigned int col_end){
-
-}
