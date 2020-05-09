@@ -195,6 +195,11 @@ void ip_mat_init_random(ip_mat * t, float mean, float var){
 ip_mat * ip_mat_sum(ip_mat * a, ip_mat * b){
     ip_mat *new_ip_mat;
     int i,j,z;
+
+    assert(a->w == b->w);
+    assert(a->h == b->h);
+    assert(a->k == b->k);
+
     new_ip_mat = ip_mat_create(a->w,a->h,a->k,0.0);
 
     if(a->h != b->h || a->w != b->w || a->k != b->k){
@@ -219,6 +224,12 @@ ip_mat * ip_mat_sum(ip_mat * a, ip_mat * b){
 ip_mat * ip_mat_sub(ip_mat * a, ip_mat * b){
     ip_mat *new_ip_mat;
     int i,j,z;
+
+
+    assert(a->w == b->w);
+    assert(a->h == b->h);
+    assert(a->k == b->k);
+
     new_ip_mat = ip_mat_create(a->w,a->h,a->k,0.0);
 
     if(a->h != b->h || a->w != b->w || a->k != b->k){
@@ -259,8 +270,8 @@ ip_mat * ip_mat_mul_scalar(ip_mat *a, float c){
 ip_mat *  ip_mat_add_scalar(ip_mat *a, float c){
     ip_mat *new_ip_mat;
     int i,j,z;
+   
     new_ip_mat = ip_mat_create(a->w,a->h,a->k,0.0);
-
     for(i=0;i<a->w;i++){
         for(j=0;j<a->h;j++){
             for(z=0;z<a->k;z++){
@@ -276,6 +287,12 @@ ip_mat *  ip_mat_add_scalar(ip_mat *a, float c){
 ip_mat * ip_mat_mean(ip_mat * a, ip_mat * b){
     ip_mat *new_ip_mat;
     int i,j,z;
+
+    assert(a->w == b->w);
+    assert(a->h == b->h);
+    assert(a->k == b->k);
+
+
     new_ip_mat = ip_mat_create(a->w,a->h,a->k,0.0);
 
     if(a->h != b->h || a->w != b->w || a->k != b->k){
