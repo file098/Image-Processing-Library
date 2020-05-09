@@ -285,15 +285,13 @@ ip_mat *  ip_mat_add_scalar(ip_mat *a, float c){
 
 /* Calcola la media di due ip_mat a e b e la restituisce in output.*/
 ip_mat * ip_mat_mean(ip_mat * a, ip_mat * b){
-    ip_mat *new_ip_mat;
     int i,j,z;
 
     assert(a->w == b->w);
     assert(a->h == b->h);
     assert(a->k == b->k);
 
-
-    new_ip_mat = ip_mat_create(a->w,a->h,a->k,0.0);
+    ip_mat *new_ip_mat = ip_mat_create(a->w,a->h,a->k,0.0);
 
     if(a->h != b->h || a->w != b->w || a->k != b->k){
         printf("Error, ip_mat a and b are not the same size");
@@ -311,16 +309,13 @@ ip_mat * ip_mat_mean(ip_mat * a, ip_mat * b){
     return new_ip_mat;
 }
 
-/*Il parametro dimensione indica su quale dimensione vado a modificare il valore*/
-ip_mat * ip_mat_concat(ip_mat * a, ip_mat * b, int dimensione);
-
 ip_mat * ip_mat_subset(ip_mat * t, unsigned int row_start, unsigned int row_end, unsigned int col_start, unsigned int col_end) {
     int i,j,k;
 
-    ip_mat *new_ip_mat = ip_mat_create((row_end-row_start), (col_end-col_start), t->k, 0);
+    ip_mat *new_ip_mat = ip_mat_create((row_end-row_start-1), (col_end-col_start-1), t->k, 0);
 
-    for (i=0;i<new_ip_mat->h;i++) {
-        for (j=0;j<new_ip_mat->w;j++) {
+    for (i=row_start;i<row_end;i++) {
+        for (j=col_start;j<col_end;j++) {
             for (k=0;k<new_ip_mat->k;k++) {
                 new_ip_mat->data[i][j][k]=t->data[i][j][k];
             }
@@ -328,5 +323,22 @@ ip_mat * ip_mat_subset(ip_mat * t, unsigned int row_start, unsigned int row_end,
     }
     compute_stats(new_ip_mat);
 
+    return new_ip_mat;
+}
+
+ip_mat * ip_mat_copy(ip_mat * in){
+    int i,j,z;
+
+    ip_mat *new_ip_mat = ip_mat_create(in->w,in->h,in->k,0.0);
+
+    new_ip_mat->stat = in->stat;
+
+    for(i=0;i<in->h;i++){
+        for(j=0;j<in->w;j++){
+            for(z=0;z<in->k;z++){
+                new_ip_mat->data[i][j][z] = in->data[i][j][z];
+            }
+        }
+    }
     return new_ip_mat;
 }
