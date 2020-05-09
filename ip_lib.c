@@ -313,3 +313,20 @@ ip_mat * ip_mat_mean(ip_mat * a, ip_mat * b){
 
 /*Il parametro dimensione indica su quale dimensione vado a modificare il valore*/
 ip_mat * ip_mat_concat(ip_mat * a, ip_mat * b, int dimensione);
+
+ip_mat * ip_mat_subset(ip_mat * t, unsigned int row_start, unsigned int row_end, unsigned int col_start, unsigned int col_end) {
+    int i,j,k;
+
+    ip_mat *new_ip_mat = ip_mat_create((row_end-row_start), (col_end-col_start), t->k, 0);
+
+    for (i=0;i<new_ip_mat->h;i++) {
+        for (j=0;j<new_ip_mat->w;j++) {
+            for (k=0;k<new_ip_mat->k;k++) {
+                new_ip_mat->data[i][j][k]=t->data[i][j][k];
+            }
+        }
+    }
+    compute_stats(new_ip_mat);
+
+    return new_ip_mat;
+}
