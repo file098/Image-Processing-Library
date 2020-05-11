@@ -182,14 +182,6 @@ void compute_stats(ip_mat * t) {
     t->stat->mean = tot;
 }
 
-/* Inizializza una ip_mat con dimensioni w h e k.
- * Ogni elemento è generato da una gaussiana con media mean e varianza var */
-
-/*rimpiazzo ogni elemento della matrice con valori genreati da una funzione gaussiana*/
-void ip_mat_init_random(ip_mat * t, float mean, float var){
-
-}
-
 /**** PARTE 1: OPERAZIONI MATEMATICHE FRA IP_MAT ****/
 /* Esegue la somma di due ip_mat (tutte le dimensioni devono essere identiche)
  * e la restituisce in output. */
@@ -309,6 +301,18 @@ ip_mat * ip_mat_mean(ip_mat * a, ip_mat * b){
     return new_ip_mat;
 }
 
+void ip_mat_init_random(ip_mat * t, float mean, float var){
+    int i, j, k;
+    for (i=0;i<t->h; i++) {
+        for (j=0;j<t->w;j++) {
+            for (k=0;k<t->k;k++) {
+                t->data[i][j][k]=(1/sqrt(2*PI*var*var)*exp(pow(get_normal_random()-mean, 2)/(2*var*var)));
+            }
+        }
+    }
+    compute_stats(t);
+}
+
 ip_mat * ip_mat_subset(ip_mat * t, unsigned int row_start, unsigned int row_end, unsigned int col_start, unsigned int col_end) {
     int i,j,k;
 
@@ -341,4 +345,65 @@ ip_mat * ip_mat_copy(ip_mat * in){
         }
     }
     return new_ip_mat;
+}
+
+/*FIXME: c'è qualcosa che non va*/ 
+ip_mat * ip_mat_to_gray_scale(ip_mat * in) {
+    ip_mat *g;
+    int i;
+    int j;
+    int k;
+    float s;
+    g=ip_mat_create(in->h, in->w, 1, 0);
+    for (i=0;i<in->h;i++) {
+        for (j=0;j<in->w;j++) {
+            s=0.;
+            for (k=0;k<in->k;k++) {
+                s+=in->data[i][j][k];
+            }  
+            g->data[i][j][0]=s/k*1.;
+        }
+    }
+    compute_stats(g);
+    return g;
+}
+
+
+ip_mat * ip_mat_brighten(ip_mat * a, float bright){
+    ip_mat *new_ip_mat = ip_mat_add_scalar(a,bright);
+    return new_ip_mat;
+}
+
+/* Da finire, non funziona 
+ip_mat * ip_mat_corrupt(ip_mat * a, float amount){
+    int i,j,z;
+    ip_mat * out = ip_mat_create(a->h,a->w,a->k,0.0);
+    for (i=0;i<a->h;i++) {
+        for (j=0;j<a->w;j++) {
+            for (z=0;z<a->k;z++) {
+                out->data[i][j][z] = a->data[i][j][z] +  * amount;
+            }
+        }
+    }
+    compute_stats(out);
+    return out;
+}
+*/
+
+ip_mat * ip_mat_blend(ip_mat * a, ip_mat * b, float alpha) {
+    ip_mat *blend;
+    int i;
+    int j;
+    int k;
+    //assert(a->h==b->h && a->w==b->w && a->k==b->k); /*ci serve?*/
+    blend=ip_mat_create(a->h, a->w, a->k, 0.);
+    for (i=0;i<a->h;i++) {
+        for (j=0;j<a->w;j++) {
+            for (k=0;k<a->k;k++) {
+                blend->data[i][j][k]=(alpha*a->data[i][j][k])+(1-alpha)*b->data[i][j][k];
+            }
+        }
+    }
+    compute_stats(blend);
+    return blend;
 }
