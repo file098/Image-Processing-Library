@@ -5,10 +5,12 @@
 #include "ip_lib.h"
 
 int main(){
-    ip_mat * n1_ip_mat = ip_mat_create(5,5,3,0.0);
-    ip_mat * n2_ip_mat = ip_mat_create(5,5,3,254.0);
-    ip_mat * new_ip_m = ip_mat_blend(n1_ip_mat,n2_ip_mat,0.5);
-    Bitmap * new  = ip_mat_to_bitmap(new_ip_m);
+    Bitmap * picb = bm_load("flower2.bmp");
+    ip_mat * pic = bitmap_to_ip_mat(picb);
+    ip_mat * filt = ip_mat_create(3,3,1,1);
+    ip_mat * out = ip_mat_convolve(pic,filt);
+
+    Bitmap * new = ip_mat_to_bitmap(out);
     bm_save(new,"new.bmp");
     return 0;
 }
