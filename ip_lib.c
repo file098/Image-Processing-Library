@@ -355,13 +355,13 @@ ip_mat * ip_mat_to_gray_scale(ip_mat * in) {
         for (j=0;j<in->w;j++) {
             sum = 0.0;
             for (z=0;z<in->k;z++) {
-                sum+=in->data[i][j][z];
+                sum += in->data[i][j][z];
             }  
             sum = (sum/1.0*z);
 
             for (z=0;z<in->k;z++) {
-                new_ip_mat->data[i][j][z]= sum;
-            }  
+                new_ip_mat->data[i][j][z] = sum;
+            }
         }
     }
     compute_stats(new_ip_mat);
@@ -447,7 +447,6 @@ ip_mat * ip_mat_padding(ip_mat * a, int pad_h, int pad_w){
     for (i=0; i<a->h; i++) {
         for (j=0; j<a->w; j++){
             for(k=0; k<a->k; k++){
-                printf("qui\n");
                 new_ip_mat->data[i+pad_h][j+pad_w][k] = a->data[i][j][k];
             }
         }
