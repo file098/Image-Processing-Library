@@ -406,13 +406,43 @@ ip_mat * ip_mat_blend(ip_mat * a, ip_mat * b, float alpha) {
     return blend;
 }
 
+void clamp(ip_mat * mat, float low, float high){
+    int i,j,k;
+    for (i=0; i<mat->h; i++) {
+        for (j=0; j<mat->w; j++){
+            for(k=0; k<mat->k; k++){
+                if(mat->data[i][j][k]>high)
+                    mat->data[i][j][k] = high;
+                if(mat->data[i][j][k]<low)
+                    mat->data[i][j][k] = low;
+            }
+        }
+    }
+}
+
+void rescale(ip_mat * t, float new_max){
+    int i, j, k;
+    compute_stats(t);
+    float min = t->stat->min;
+    float max = t->stat->max;
+
+    for (i=0; i<t->h; i++) {
+        for (j=0; j<t->w; j++){
+            for(k=0; k<t->k; k++){
+                t->data[i][j][k] = ((t->data[i][j][k] - min) / (max - min))*new_max;
+            }
+        }
+    }   
+    compute_stats(t);
+}
+
 /* Effettua la convoluzione di un ip_mat "a" con un ip_mat "f".
  * La funzione restituisce un ip_mat delle stesse dimensioni di "a".
  * */
 ip_mat * ip_mat_convolve(ip_mat * a, ip_mat * f){
     int i, j, k;
     int x, y;
-    int s;
+    float s;
     ip_mat * new_ip_mat = ip_mat_create(a->h,a->w,a->k,0.0);
     ip_mat * temp =(ip_mat_create(a->h+(f->h-1)/2, a->w+(f->w-1)/2, a->k, 0.));
     temp = ip_mat_padding(a,(f->h-1)/2,(f->w-1)/2);
@@ -425,14 +455,15 @@ ip_mat * ip_mat_convolve(ip_mat * a, ip_mat * f){
                 s = 0.0;
                 for (x=0; x<f->h; x++) { //vert
                     for (y=0; y<f->w; y++) { //horz
-                        s += temp->data[i+x][j+y][k]*(f->data[x][y][0]);
+                        s += (temp->data[i+x][j+y][k])*(f->data[x][y][0]);
                     }
                 }
                 new_ip_mat->data[i][j][k] = s;
             }
         }
     }
-    compute_stats(new_ip_mat);
+    rescale(new_ip_mat , 255.0);
+    clamp(new_ip_mat,0.0,255.0);
     return new_ip_mat;
 }
 
@@ -450,3 +481,6 @@ ip_mat * ip_mat_padding(ip_mat * a, int pad_h, int pad_w){
     return new_ip_mat;
 }
 
+
+/* Nell'operazione di clamping i valori <low si convertono in low e i valori >high in high.*/
+void clamp(ip_mat * t, float low, float high);

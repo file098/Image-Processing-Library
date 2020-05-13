@@ -5,6 +5,5 @@ testMain:
 	rm testMain
 clean:
 	rm testMain
-	rm new.bmp
 memCheck:
 	valgrind -v --leak-check=full ./testMain
