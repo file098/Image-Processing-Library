@@ -1,4 +1,3 @@
-
 /*
  Created by Sebastiano Vascon on 23/03/20.
 */
@@ -25,7 +24,7 @@ void ip_mat_show(ip_mat * t){
 
 void ip_mat_show_stats(ip_mat * t){
     unsigned int k;
-
+    
     compute_stats(t);
 
     for(k=0;k<t->k;k++){
@@ -148,7 +147,8 @@ void ip_mat_free(ip_mat *a){
     free(a);
 }
 
-/* Calcola il valore minimo, il massimo e la media per ogni canale
+/*
+ * Calcola il valore minimo, il massimo e la media per ogni canale
  * e li salva dentro la struttura ip_mat stats
  * */
 void compute_stats(ip_mat * t) {
@@ -346,25 +346,25 @@ ip_mat * ip_mat_copy(ip_mat * in){
     return new_ip_mat;
 }
 
-/*FIXME: c'è qualcosa che non va*/
+/*DONE*/
 ip_mat * ip_mat_to_gray_scale(ip_mat * in) {
-    ip_mat *  new_ip_mat = ip_mat_create(in->h, in->w, in->k, 0.0);
     int i, j, z;
-    float sum;
-    for (i=0;i<in->h;i++) {
-        for (j=0;j<in->w;j++) {
-            sum = 0.0;
-            for (z=0;z<in->k;z++) {
-                sum += in->data[i][j][z];
-            }  
-            sum = (sum/1.0*z);
+    float mean;
+    ip_mat * new_ip_mat =  ip_mat_create(in->h, in->w, in->k, 0.0);
+    
+    for(i=0; i<in->h; i++){
+        for(j=0; j<in->w; j++){
+            float tot = 0.0;
+            for(z=0; z<in->k; z++){
+                tot += in->data[i][j][z];
+            }
+            mean = tot/z;
 
-            for (z=0;z<in->k;z++) {
-                new_ip_mat->data[i][j][z] = sum;
+            for(z=0; z<in->k; z++){
+                new_ip_mat->data[i][j][z] = mean;
             }
         }
     }
-    compute_stats(new_ip_mat);
     return new_ip_mat;
 }
 
@@ -374,22 +374,22 @@ ip_mat * ip_mat_brighten(ip_mat * a, float bright){
     return new_ip_mat;
 }
 
-/* Da finire, non funziona 
+/* FIXME: Da finire, non funziona */
 ip_mat * ip_mat_corrupt(ip_mat * a, float amount){
     int i,j,z;
     ip_mat * out = ip_mat_create(a->h,a->w,a->k,0.0);
     for (i=0;i<a->h;i++) {
         for (j=0;j<a->w;j++) {
             for (z=0;z<a->k;z++) {
-                out->data[i][j][z] = a->data[i][j][z] +  * amount;
+                out->data[i][j][z] = a->data[i][j][z] + i * amount;
             }
         }
     }
     compute_stats(out);
     return out;
 }
-*/
 
+/*DONE*/
 ip_mat * ip_mat_blend(ip_mat * a, ip_mat * b, float alpha) {
     ip_mat *blend;
     int i, j, k;
@@ -410,37 +410,33 @@ ip_mat * ip_mat_blend(ip_mat * a, ip_mat * b, float alpha) {
  * La funzione restituisce un ip_mat delle stesse dimensioni di "a".
  * */
 ip_mat * ip_mat_convolve(ip_mat * a, ip_mat * f){
-    int i;
-    int j;
-    int k;
-    int x, y, s;
-    ip_mat * n = ip_mat_create(a->h,a->w,a->k,0.0);
-    ip_mat *c=(ip_mat_create(a->h+(f->h-1)/2, a->w+(f->w-1)/2, a->k, 0.));
-    c = ip_mat_padding(a,(f->h-1)/2,(f->w-1)/2);
+    int i, j, k;
+    int x, y;
+    int s;
+    ip_mat * new_ip_mat = ip_mat_create(a->h,a->w,a->k,0.0);
+    ip_mat * temp =(ip_mat_create(a->h+(f->h-1)/2, a->w+(f->w-1)/2, a->k, 0.));
+    temp = ip_mat_padding(a,(f->h-1)/2,(f->w-1)/2);
     //Movimeto all'interno della matrice a
-    for (i=0; i<c->h-f->h; i++){
-        for (j=0; j<c->w-f->w; j++){
-            for (k=0;k < c->k; k++){
-                s=0;
+    for (i=0; i<(temp->h)-(f->h); i++){
+        for (j=0; j<(temp->w)-(f->w); j++){
+            for (k=0; k<temp->k; k++){
                 //Somme nelle matrici
-                // Scorre sul filtro 
-                for (x=0;x<f->h;x++) { //vert
-                    for (y=0;y<f->w;y++) { // horz
-                        n->data[i][j][k]+=c->data[i+x][j+y][k]*f->data[x][y][0];
+                // Scorre sul filtro
+                s = 0.0;
+                for (x=0; x<f->h; x++) { //vert
+                    for (y=0; y<f->w; y++) { //horz
+                        s += temp->data[i+x][j+y][k]*(f->data[x][y][0]);
                     }
                 }
+                new_ip_mat->data[i][j][k] = s;
             }
         }
     }
-    compute_stats(n);
-    return n;
+    compute_stats(new_ip_mat);
+    return new_ip_mat;
 }
-/*
-In generale il padding si calcola come:
-P = (F-1)/2 mantenendo la parte intera.
-Dove P è il valore del padding risultante ed F è la dimensione del filtro.
-*/
 
+/*DONE*/
 ip_mat * ip_mat_padding(ip_mat * a, int pad_h, int pad_w){
     int i, j, k;
     ip_mat * new_ip_mat = ip_mat_create(a->h + 2*pad_h, a->w + 2*pad_w, a->k, 0.0);
@@ -453,3 +449,4 @@ ip_mat * ip_mat_padding(ip_mat * a, int pad_h, int pad_w){
     }
     return new_ip_mat;
 }
+

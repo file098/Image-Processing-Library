@@ -3,9 +3,8 @@ testMain:
 	gcc main.c bmp.o ip_lib.o -o testMain -Wall -lm
 	./testMain
 	rm testMain
-
 clean:
 	rm testMain
-
+	rm new.bmp
 memCheck:
 	valgrind -v --leak-check=full ./testMain
