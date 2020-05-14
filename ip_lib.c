@@ -429,20 +429,18 @@ void rescale(ip_mat * t, float new_max){
     for (i=0; i<t->h; i++) {
         for (j=0; j<t->w; j++){
             for(k=0; k<t->k; k++){
-                t->data[i][j][k] = ((t->data[i][j][k] - min) / (max - min))*new_max;
+                t->data[i][j][k] = ((t->data[i][j][k] - min) / (max - min));
+                t->data[i][j][k] *= new_max;
             }
         }
     }   
     compute_stats(t);
 }
 
-/* Effettua la convoluzione di un ip_mat "a" con un ip_mat "f".
- * La funzione restituisce un ip_mat delle stesse dimensioni di "a".
- * */
 ip_mat * ip_mat_convolve(ip_mat * a, ip_mat * f){
     int i, j, k;
     int x, y;
-    float s;
+    float sum;
     ip_mat * new_ip_mat = ip_mat_create(a->h,a->w,a->k,0.0);
     ip_mat * temp =(ip_mat_create(a->h+(f->h-1)/2, a->w+(f->w-1)/2, a->k, 0.));
     temp = ip_mat_padding(a,(f->h-1)/2,(f->w-1)/2);
@@ -452,13 +450,13 @@ ip_mat * ip_mat_convolve(ip_mat * a, ip_mat * f){
             for (k=0; k<temp->k; k++){
                 //Somme nelle matrici
                 // Scorre sul filtro
-                s = 0.0;
+                sum = 0.0;
                 for (x=0; x<f->h; x++) { //vert
                     for (y=0; y<f->w; y++) { //horz
-                        s += (temp->data[i+x][j+y][k])*(f->data[x][y][0]);
+                        sum += (temp->data[i+x][j+y][k])*(f->data[x][y][0]);
                     }
                 }
-                new_ip_mat->data[i][j][k] = s;
+                new_ip_mat->data[i][j][k] = sum;
             }
         }
     }
@@ -481,6 +479,42 @@ ip_mat * ip_mat_padding(ip_mat * a, int pad_h, int pad_w){
     return new_ip_mat;
 }
 
+/* DEBUG: troppo scuro */
+ip_mat * create_sharpen_filter(){
+    ip_mat * sharp = ip_mat_create(3,3,1,0.0);
+    set_val(sharp,1,0,0,-1.0);
+    set_val(sharp,0,1,0,-1.0);
+    set_val(sharp,1,2,0,-1.0);
+    set_val(sharp,2,1,0,-1.0);
+    set_val(sharp,1,1,0,5.0);
+    compute_stats(sharp);
+    return sharp;
+}
 
-/* Nell'operazione di clamping i valori <low si convertono in low e i valori >high in high.*/
-void clamp(ip_mat * t, float low, float high);
+/* DONE */
+ip_mat * create_edge_filter(){
+    int i;
+    ip_mat * sharpen = ip_mat_create(3,3,3,-1.0);
+    for(i=0; i<3; i++){
+        set_val(sharpen,1,1,i,8.0);
+    }
+    compute_stats(sharpen);
+    return sharpen;
+}
+
+/* Crea un filtro per aggiungere profondità */
+ip_mat * create_emboss_filter();
+
+/* DONE */
+ip_mat * create_average_filter(int w, int h, int k){
+    double c = 1.0/((w * h)*1.0);
+    ip_mat * average_filter = ip_mat_create(w,h,k,c);
+    compute_stats(average_filter);
+    return average_filter;
+}
+
+/* Crea un filtro gaussiano per la rimozione del rumore */
+ip_mat * create_gaussian_filter(int w, int h, int k, float sigma);
+
+
+
