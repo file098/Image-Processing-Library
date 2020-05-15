@@ -98,7 +98,6 @@ float get_normal_random(){
     float y1 = ( (float)(rand()) + 1. )/( (float)(RAND_MAX) + 1. );
     float y2 = ( (float)(rand()) + 1. )/( (float)(RAND_MAX) + 1. );
     return cos(2*PI*y2)*sqrt(-2.*log(y1));
-
 }
 
 ip_mat * ip_mat_create(unsigned int h, unsigned int w,unsigned  int k, float v) {
@@ -125,7 +124,7 @@ ip_mat * ip_mat_create(unsigned int h, unsigned int w,unsigned  int k, float v) 
         for (j=0;j<w;j++) {
             (new_ip_mat->data)[i][j]=(float *)malloc(sizeof(float)*k);
             for (p=0;p<k;p++) {
-                (new_ip_mat->data)[i][j][p]=v;
+                new_ip_mat->data[i][j][p] = v;
             }
         }
     }
@@ -315,7 +314,8 @@ void ip_mat_init_random(ip_mat * t, float mean, float var){
 ip_mat * ip_mat_subset(ip_mat * t, unsigned int row_start, unsigned int row_end, unsigned int col_start, unsigned int col_end) {
     int i,j,k;
 
-    ip_mat *new_ip_mat = ip_mat_create((row_end-row_start-1), (col_end-col_start-1), t->k, 0);
+    /* HACK: +1 o -1 ? */
+    ip_mat *new_ip_mat = ip_mat_create((row_end-row_start+1), (col_end-col_start+1), t->k, 0.0);
 
     for (i=row_start;i<row_end;i++) {
         for (j=col_start;j<col_end;j++) {
@@ -325,7 +325,6 @@ ip_mat * ip_mat_subset(ip_mat * t, unsigned int row_start, unsigned int row_end,
         }
     }
     compute_stats(new_ip_mat);
-
     return new_ip_mat;
 }
 
@@ -344,6 +343,78 @@ ip_mat * ip_mat_copy(ip_mat * in){
         }
     }
     return new_ip_mat;
+}
+
+/*DONE*/
+ip_mat * ip_mat_concat(ip_mat * a, ip_mat * b, int dimensione){
+    ip_mat *out = NULL;
+    int i, j, k;
+    
+    switch (dimensione){
+        case 0:
+            if(a->w != b->w || a->k != b->k){
+                exit(1);
+            }
+            out = ip_mat_create((a->h+b->h), a->w, a->k, 0.0);
+            for(i=0; i<a->h; i++){
+                for(j=0; j<out->w; j++){
+                    for(k=0; k<out->k; k++){
+                        out->data[i][j][k] = a->data[i][j][k];
+                    }
+                }
+            }
+            for(i=0;i<b->h;i++){
+                for(j=0; j<out->w; j++){
+                    for(k=0; k<out->k; k++){ 
+                        out->data[i+a->h][j][k] = b->data[i][j][k];
+                    }
+                }
+            }
+            break;
+        case 1:
+            if(a->h != b->h || a->k != b->k)
+                    exit(1);
+            out = ip_mat_create(a->h, a->w+b->w, a->k, 0.0);
+            for(i=0; i<out->h; i++){
+                for(j=0; j<a->w; j++){
+                    for(k=0; k<out->k; k++){
+                        out->data[i][j][k] = a->data[i][j][k];
+                    }
+                }
+            }
+            for(i=0;i<out->h;i++){
+                for(j=0; j<b->w; j++){
+                    for(k=0; k<out->k; k++){ 
+                        out->data[i][j+b->h][k] = b->data[i][j][k];
+                    }
+                }
+            }
+            break;
+        case 2:
+            if(a->w != b->w || a->h != b->h)
+                    exit(1);
+            out = ip_mat_create(a->h, a->w, (a->k+b->k), 0.0);
+            for(i=0; i<out->h; i++){
+                for(j=0; j<out->w; j++){
+                    for(k=0; k<a->k; k++){
+                        out->data[i][j][k] = a->data[i][j][k];
+                    }
+                }
+            }
+            for(i=0;i<out->h;i++){
+                for(j=0; j<out->w; j++){
+                    for(k=0; k<b->k; k++){ 
+                        out->data[i][j][k+a->k] = b->data[i][j][k];
+                    }
+                }
+            }
+            break;
+        default:
+            exit(1);
+            break;
+    }
+    compute_stats(out);
+    return out;
 }
 
 /*DONE*/
@@ -502,8 +573,25 @@ ip_mat * create_edge_filter(){
     return sharpen;
 }
 
-/* Crea un filtro per aggiungere profondità */
-ip_mat * create_emboss_filter();
+
+ip_mat * create_emboss_filter(){
+    int i;
+    float x;
+    ip_mat * emboss = ip_mat_create(3,3,1,1.0);
+    x = -2.0;
+    for(i=0; i<3; i++){
+        emboss->data[0][i][0] = x;
+        x += 1;
+    }
+    set_val(emboss,1,0,0,-1.0);
+    x = 0.0;
+    for(i=0; i<3; i++){
+        emboss->data[2][i][0] = x;
+        x += 1;
+    }
+    compute_stats(emboss);
+    return emboss;
+}
 
 /* DONE */
 ip_mat * create_average_filter(int w, int h, int k){
