@@ -94,12 +94,13 @@ void set_val(ip_mat * a, unsigned int i,unsigned int j,unsigned int k, float v){
     }
 }
 
+/* FIXME: */
 float get_normal_random(){
     float y1 = ( (float)(rand()) + 1. )/( (float)(RAND_MAX) + 1. );
     float y2 = ( (float)(rand()) + 1. )/( (float)(RAND_MAX) + 1. );
     return cos(2*PI*y2)*sqrt(-2.*log(y1));
 }
-
+/*DONE*/
 ip_mat * ip_mat_create(unsigned int h, unsigned int w,unsigned  int k, float v) {
     ip_mat *new_ip_mat;
     int i,j,p;
@@ -131,10 +132,10 @@ ip_mat * ip_mat_create(unsigned int h, unsigned int w,unsigned  int k, float v) 
     return new_ip_mat;
 }
 
+/*DONE*/
 void ip_mat_free(ip_mat *a){
-    int i;
-    int j;
-    
+    int i, j;
+    assert(a);
     for(i=0;i<a->h;i++) {
         for(j=0;j<a->w;j++) {
             free(a->data[i][j]);
@@ -150,6 +151,7 @@ void ip_mat_free(ip_mat *a){
  * Calcola il valore minimo, il massimo e la media per ogni canale
  * e li salva dentro la struttura ip_mat stats
  * */
+/* DONE */
 void compute_stats(ip_mat * t) {
     int i,j,z;
     float count = 0.0;
@@ -185,6 +187,7 @@ void compute_stats(ip_mat * t) {
 /**** PARTE 1: OPERAZIONI MATEMATICHE FRA IP_MAT ****/
 /* Esegue la somma di due ip_mat (tutte le dimensioni devono essere identiche)
  * e la restituisce in output. */
+/* DONE */
 ip_mat * ip_mat_sum(ip_mat * a, ip_mat * b){
     ip_mat *new_ip_mat;
     int i,j,z;
@@ -210,7 +213,7 @@ ip_mat * ip_mat_sum(ip_mat * a, ip_mat * b){
     }
     return new_ip_mat;
 }
-
+/*DONE*/
 /* Esegue la sottrazione di due ip_mat (tutte le dimensioni devono essere identiche)
  * e la restituisce in output.
  * */
@@ -239,7 +242,7 @@ ip_mat * ip_mat_sub(ip_mat * a, ip_mat * b){
     }
     return new_ip_mat;
 }
-
+/*DONE*/
 /* Moltiplica un ip_mat per uno scalare c. Si moltiplica c per tutti gli elementi di "a"
  * e si salva il risultato in un nuovo tensore in output. */
 ip_mat * ip_mat_mul_scalar(ip_mat *a, float c){
@@ -258,6 +261,7 @@ ip_mat * ip_mat_mul_scalar(ip_mat *a, float c){
     return new_ip_mat;
 }
 
+/* DONE */
 /* Aggiunge ad un ip_mat uno scalare c e lo restituisce in un nuovo tensore in output. */
 ip_mat *  ip_mat_add_scalar(ip_mat *a, float c){
     ip_mat *new_ip_mat = ip_mat_create(a->h,a->w,a->k,0.0);
@@ -273,6 +277,7 @@ ip_mat *  ip_mat_add_scalar(ip_mat *a, float c){
     return new_ip_mat;
 }
 
+/* DONE */
 /* Calcola la media di due ip_mat a e b e la restituisce in output.*/
 ip_mat * ip_mat_mean(ip_mat * a, ip_mat * b){
     int i,j,z;
@@ -298,7 +303,7 @@ ip_mat * ip_mat_mean(ip_mat * a, ip_mat * b){
     }
     return new_ip_mat;
 }
-
+/*DONE*/
 void ip_mat_init_random(ip_mat * t, float mean, float var){
     int i, j, k;
     for (i=0;i<t->h; i++) {
@@ -311,10 +316,10 @@ void ip_mat_init_random(ip_mat * t, float mean, float var){
     compute_stats(t);
 }
 
+/* DONE */
 ip_mat * ip_mat_subset(ip_mat * t, unsigned int row_start, unsigned int row_end, unsigned int col_start, unsigned int col_end) {
     int i,j,k;
 
-    /* HACK: +1 o -1 ? */
     ip_mat *new_ip_mat = ip_mat_create((row_end-row_start+1), (col_end-col_start+1), t->k, 0.0);
 
     for (i=row_start;i<row_end;i++) {
@@ -327,7 +332,7 @@ ip_mat * ip_mat_subset(ip_mat * t, unsigned int row_start, unsigned int row_end,
     compute_stats(new_ip_mat);
     return new_ip_mat;
 }
-
+/*DONE*/
 ip_mat * ip_mat_copy(ip_mat * in){
     int i,j,z;
 
@@ -438,14 +443,13 @@ ip_mat * ip_mat_to_gray_scale(ip_mat * in) {
     }
     return new_ip_mat;
 }
-
-
+/*DONE*/
 ip_mat * ip_mat_brighten(ip_mat * a, float bright){
     ip_mat *new_ip_mat = ip_mat_add_scalar(a,bright);
     return new_ip_mat;
 }
 
-/* FIXME: Da finire, non funziona */
+/* TODO:: Da finire, non funziona */
 ip_mat * ip_mat_corrupt(ip_mat * a, float amount){
     int i,j,z;
     ip_mat * out = ip_mat_create(a->h,a->w,a->k,0.0);
@@ -477,6 +481,7 @@ ip_mat * ip_mat_blend(ip_mat * a, ip_mat * b, float alpha) {
     return blend;
 }
 
+/* DONE */
 void clamp(ip_mat * mat, float low, float high){
     int i,j,k;
     for (i=0; i<mat->h; i++) {
@@ -491,6 +496,7 @@ void clamp(ip_mat * mat, float low, float high){
     }
 }
 
+/* DONE */
 void rescale(ip_mat * t, float new_max){
     int i, j, k;
     compute_stats(t);
@@ -508,6 +514,7 @@ void rescale(ip_mat * t, float new_max){
     compute_stats(t);
 }
 
+/* DONE */
 ip_mat * ip_mat_convolve(ip_mat * a, ip_mat * f){
     int i, j, k;
     int x, y;
@@ -531,8 +538,6 @@ ip_mat * ip_mat_convolve(ip_mat * a, ip_mat * f){
             }
         }
     }
-    rescale(new_ip_mat , 255.0);
-    clamp(new_ip_mat,0.0,255.0);
     return new_ip_mat;
 }
 
@@ -549,15 +554,18 @@ ip_mat * ip_mat_padding(ip_mat * a, int pad_h, int pad_w){
     }
     return new_ip_mat;
 }
-
-/* DEBUG: troppo scuro */
+/*DONE*/
 ip_mat * create_sharpen_filter(){
-    ip_mat * sharp = ip_mat_create(3,3,1,0.0);
-    set_val(sharp,1,0,0,-1.0);
-    set_val(sharp,0,1,0,-1.0);
-    set_val(sharp,1,2,0,-1.0);
-    set_val(sharp,2,1,0,-1.0);
-    set_val(sharp,1,1,0,5.0);
+    int i,j,k;
+    ip_mat * sharp = ip_mat_create(3,3,3,0.0);
+    for(i=0; i<3; i++){
+        set_val(sharp,1,0,i,-1.0);
+        set_val(sharp,0,1,i,-1.0);
+        set_val(sharp,1,2,i,-1.0);
+        set_val(sharp,2,1,i,-1.0);
+        set_val(sharp,1,1,i,5.0);
+    }
+    
     compute_stats(sharp);
     return sharp;
 }
@@ -572,22 +580,25 @@ ip_mat * create_edge_filter(){
     compute_stats(sharpen);
     return sharpen;
 }
-
-
+/*DONE*/
 ip_mat * create_emboss_filter(){
-    int i;
+    int i,k;
     float x;
-    ip_mat * emboss = ip_mat_create(3,3,1,1.0);
-    x = -2.0;
-    for(i=0; i<3; i++){
-        emboss->data[0][i][0] = x;
-        x += 1;
-    }
-    set_val(emboss,1,0,0,-1.0);
-    x = 0.0;
-    for(i=0; i<3; i++){
-        emboss->data[2][i][0] = x;
-        x += 1;
+    ip_mat * emboss = ip_mat_create(3,3,3,1.0);
+    
+    for(k=0; k<3; k++){
+        x = -2.0;
+        for(i=0; i<3; i++){
+            emboss->data[0][i][k] = x;
+            x += 1;
+            }
+    
+        set_val(emboss,1,0,k,-1.0);
+        x = 0.0;
+        for(i=0; i<3; i++){
+            emboss->data[2][i][k] = x;
+            x += 1;
+        }
     }
     compute_stats(emboss);
     return emboss;
@@ -601,8 +612,9 @@ ip_mat * create_average_filter(int w, int h, int k){
     return average_filter;
 }
 
+/* TODO: */
 /* Crea un filtro gaussiano per la rimozione del rumore */
-ip_mat * create_gaussian_filter(int w, int h, int k, float sigma);
-
-
-
+ip_mat * create_gaussian_filter(int w, int h, int k, float sigma){
+    ip_mat * gauss = ip_mat_create(3,3,3,0.0);
+    return gauss;
+}
