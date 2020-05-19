@@ -1,6 +1,6 @@
 testMain:
 	gcc ip_lib.c -o ip_lib.o -Wall -c
-	gcc main.c bmp.o ip_lib.o -o testMain -Wall -lm
+	gcc main.c bmp.o ip_lib.o -o testMain -Wall --ansi --pedantic -lm -g3 -O3 -fsanitize=address -fsanitize=undefined -std=gnu89 -Wextra
 	./testMain
 	rm testMain
 clean:
