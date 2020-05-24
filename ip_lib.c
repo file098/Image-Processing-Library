@@ -599,6 +599,7 @@ ip_mat * create_emboss_filter(){
     return emboss;
 }
 
+
 /*DONE*/
 ip_mat * create_average_filter(int w, int h, int k){
     double c = 1.0/((w * h)*1.0);
@@ -606,6 +607,7 @@ ip_mat * create_average_filter(int w, int h, int k){
     compute_stats(average_filter);
     return average_filter;
 }
+
 
 /* DONE */
 ip_mat * create_gaussian_filter(int w, int h, int k, float sigma){
