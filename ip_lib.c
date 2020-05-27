@@ -460,7 +460,7 @@ ip_mat * ip_mat_brighten(ip_mat * a, float bright){
     return new_ip_mat;
 }
 
-/* TODO: Controlla se funziona */
+/* DONE */
 ip_mat * ip_mat_corrupt(ip_mat * a, float amount){
     unsigned int i,j,z;
     ip_mat *out;
@@ -472,7 +472,7 @@ ip_mat * ip_mat_corrupt(ip_mat * a, float amount){
     for (i=0;i<a->h;i++) {
         for (j=0;j<a->w;j++) {
             for (z=0;z<a->k;z++) {
-                out->data[i][j][z] = a->data[i][j][z] + get_normal_random(0.0,0.25)*amount;
+                out->data[i][j][z] = a->data[i][j][z] + get_normal_random(0.0,1.0)*amount;
             }
         }
     }

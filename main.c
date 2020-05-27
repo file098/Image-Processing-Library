@@ -52,7 +52,8 @@ int main(){
     bm_save(new,"gauss.bmp");
     */
     
-    out = ip_mat_corrupt(pic,255);
+    out = ip_mat_corrupt(pic,100);
+    clamp(out,0,255);
     new = ip_mat_to_bitmap(out);
     bm_save(new,"new.bmp");
 

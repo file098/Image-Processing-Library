@@ -4,17 +4,17 @@ testMain(27/05/2020):
 	./testMain
 	#rm testMain
 
-testMain:
-	gcc ip_lib.c -o ip_lib.o -Wall -lm
-	gcc main_iplib.o main.c bmp.o -o testMain -Wall --ansi --pedantic -lm -g3 -O3 -fsanitize=address -fsanitize=undefined -std=gnu89 -Wextra 
-	./testMain
+test: main.o bmp.o ip_lib.o
+	gcc bmp.o main.o ip_lib.o -o test -Wall --ansi --pedantic -lm -g3 -O3 -fsanitize=address -fsanitize=undefined -std=gnu89 -Wextra
+bmp.o: bmp.c bmp.h ip_lib.h
+	gcc -c -Wall -std=gnu89 bmp.c -o bmp.o
+ip_lib.o: ip_lib.c ip_lib.h bmp.h
+	gcc -c -Wall --ansi --pedantic -std=gnu89 ip_lib.c -o ip_lib.o
+main.o: main.c bmp.h ip_lib.h
+	gcc -Wall --ansi --pedantic -std=gnu89 -c main.c -o main.o
 
-testMain2:
-	gcc -Wall -c main.c -o testMain.o -lm
-	gcc ip_lib.c bmp.o -oip_lib.o -lm
-	gcc ip_lib.o bmp.o testMain.o -otestMain
-	./testMain
 clean:
 	rm new.bmp
-memCheck:
-	valgrind -v --leak-check=full ./testMain
+
+
+

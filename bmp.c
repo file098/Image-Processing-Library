@@ -670,7 +670,7 @@ static Bitmap *bm_load_bmp_rd(BmReader rd) {
     /* 1. calculate how many bits we have to shift after masking */
     /* 2. calculate the bit depth of the input channels */
     /* 3. calculate the factor that maps the channel to 0-255 */
-    for (int i = 0; i < 3; ++i) {
+    for (i = 0; i < 3; ++i) {
         rgbshift[i] = count_trailing_zeroes(rgbmask[i]);
         uint32_t chdepth = rgbmask[i] >> rgbshift[i];
         rgbcorr[i] = chdepth ? 255.0f / chdepth : 0.0f;
