@@ -187,16 +187,11 @@ ip_mat * ip_mat_sum(ip_mat * a, ip_mat * b){
     ip_mat *new_ip_mat;
     unsigned int i,j,z;
 
-    assert(a->w == b->w);
-    assert(a->h == b->h);
-    assert(a->k == b->k);
-
-    new_ip_mat = ip_mat_create(a->w,a->h,a->k,0.0);
-
     if(a->h != b->h || a->w != b->w || a->k != b->k){
-        printf("Error, ip_mat a and b are not the same size");
+        exit(1);
     }
     else{
+        new_ip_mat = ip_mat_create(a->w,a->h,a->k,0.0);
         for(i=0;i<a->h;i++){
             for(j=0;j<a->w;j++){
                 for(z=0;z<a->k;z++){
@@ -213,17 +208,11 @@ ip_mat * ip_mat_sub(ip_mat * a, ip_mat * b){
     ip_mat *new_ip_mat;
     unsigned int i,j,z;
 
-    assert(a->w == b->w);
-    assert(a->h == b->h);
-    assert(a->k == b->k);
-
-    new_ip_mat = ip_mat_create(a->w,a->h,a->k,0.0);
-
     if(a->h != b->h || a->w != b->w || a->k != b->k){
-        printf("Error, ip_mat a and b are not the same size");
         exit(1);
     }
     else{
+        new_ip_mat = ip_mat_create(a->w,a->h,a->k,0.0);
         for(i=0;i<a->h;i++){
             for(j=0;j<a->w;j++){
                 for(z=0;z<a->k;z++){
@@ -239,13 +228,12 @@ ip_mat * ip_mat_sub(ip_mat * a, ip_mat * b){
 /* Moltiplica un ip_mat per uno scalare c. Si moltiplica c per tutti gli elementi di "a"
  * e si salva il risultato in un nuovo tensore in output. */
 ip_mat * ip_mat_mul_scalar(ip_mat *a, float c){
-
-    assert(a->w >= 0);
-    assert(a->h >= 0);
-    assert(a->k >= 0);
-
     ip_mat *new_ip_mat;
     unsigned int i,j,z;
+
+    if(a->h < 0 || a->w < 0 || a->k < 0)
+        exit(1);
+    
     new_ip_mat = ip_mat_create(a->w,a->h,a->k,0.0);
 
     for(i=0;i<a->h;i++){
@@ -262,13 +250,14 @@ ip_mat * ip_mat_mul_scalar(ip_mat *a, float c){
 /* DONE */
 /* Aggiunge ad un ip_mat uno scalare c e lo restituisce in un nuovo tensore in output. */
 ip_mat *  ip_mat_add_scalar(ip_mat *a, float c){
-
-    assert(a->w >= 0);
-    assert(a->h >= 0);
-    assert(a->k >= 0);
-
-    ip_mat *new_ip_mat = ip_mat_create(a->h,a->w,a->k,0.0);
+    ip_mat *new_ip_mat; 
     unsigned int i,j,z;
+
+    if(a->h < 0 || a->w < 0 || a->k < 0)
+        exit(1);
+
+    new_ip_mat = ip_mat_create(a->h,a->w,a->k,0.0);
+    
     for(i=0;i<a->h;i++){
         for(j=0;j<a->w;j++){
             for(z=0;z<a->k;z++){
@@ -284,13 +273,13 @@ ip_mat *  ip_mat_add_scalar(ip_mat *a, float c){
 /* Calcola la media di due ip_mat a e b e la restituisce in output.*/
 ip_mat * ip_mat_mean(ip_mat * a, ip_mat * b){
     unsigned int i,j,z;
-    ip_mat *new_ip_mat = ip_mat_create(a->w,a->h,a->k,0.0);
+    ip_mat *new_ip_mat;
 
     if(a->h != b->h || a->w != b->w || a->k != b->k){
-        printf("Error, ip_mat a and b are not the same size");
         exit(1);
     }
     else{
+        new_ip_mat = ip_mat_create(a->w,a->h,a->k,0.0);
         for(i=0;i<a->h;i++){
             for(j=0;j<a->w;j++){
                 for(z=0;z<a->k;z++){
@@ -319,12 +308,12 @@ void ip_mat_init_random(ip_mat * t, float mean, float var){
 /* DONE */
 ip_mat * ip_mat_subset(ip_mat * t, unsigned int row_start, unsigned int row_end, unsigned int col_start, unsigned int col_end) {
     unsigned int i,j,k;
+    ip_mat *new_ip_mat;
 
-    assert(t->w >= 0);
-    assert(t->h >= 0);
-    assert(t->k >= 0);
-
-    ip_mat *new_ip_mat = ip_mat_create((row_end-row_start+1), (col_end-col_start+1), t->k, 0.0);
+    if(t->h < 0 || t->w < 0 || t->k < 0)
+        exit(1);
+    
+    new_ip_mat = ip_mat_create((row_end-row_start+1), (col_end-col_start+1), t->k, 0.0);
 
     for (i=row_start;i<row_end;i++) {
         for (j=col_start;j<col_end;j++) {
@@ -340,7 +329,9 @@ ip_mat * ip_mat_subset(ip_mat * t, unsigned int row_start, unsigned int row_end,
 /*DONE*/
 ip_mat * ip_mat_copy(ip_mat * in){
     unsigned int i,j,z;
-    ip_mat *new_ip_mat = ip_mat_create(in->w,in->h,in->k,0.0);
+    ip_mat *new_ip_mat;
+    
+    new_ip_mat = ip_mat_create(in->w,in->h,in->k,0.0);
 
     new_ip_mat->stat = in->stat;
 
@@ -358,6 +349,11 @@ ip_mat * ip_mat_copy(ip_mat * in){
 ip_mat * ip_mat_concat(ip_mat * a, ip_mat * b, int dimensione){
     ip_mat *out = NULL;
     unsigned int i, j, k;
+    
+    if(a->h < 0 || a->w < 0 || a->k < 0)
+        exit(1);
+    if(b->h < 0 || b->w < 0 || b->k < 0)
+        exit(1);
     
     switch (dimensione){
         case 0:
@@ -430,12 +426,12 @@ ip_mat * ip_mat_concat(ip_mat * a, ip_mat * b, int dimensione){
 ip_mat * ip_mat_to_gray_scale(ip_mat * in) {
     unsigned int i, j, z;
     float mean;
+    ip_mat *new_ip_mat;
 
-    assert(in->w >= 0);
-    assert(in->h >= 0);
-    assert(in->k >= 0);
+    if(in->h < 0 || in->w < 0 || in->k < 0)
+        exit(1);
 
-    ip_mat * new_ip_mat =  ip_mat_create(in->h, in->w, in->k, 0.0);
+    new_ip_mat =  ip_mat_create(in->h, in->w, in->k, 0.0);
     
     for(i=0; i<in->h; i++){
         for(j=0; j<in->w; j++){
@@ -455,20 +451,24 @@ ip_mat * ip_mat_to_gray_scale(ip_mat * in) {
 
 /*DONE*/
 ip_mat * ip_mat_brighten(ip_mat * a, float bright){
-    assert(a->w >= 0);
-    assert(a->h >= 0);
-    assert(a->k >= 0);
-    ip_mat *new_ip_mat = ip_mat_add_scalar(a,bright);
+    ip_mat *new_ip_mat;
+
+    if(a->h < 0 || a->w < 0 || a->k < 0)
+        exit(1);
+    
+    new_ip_mat = ip_mat_add_scalar(a,bright);
     return new_ip_mat;
 }
 
 /* TODO: Controlla se funziona */
 ip_mat * ip_mat_corrupt(ip_mat * a, float amount){
     unsigned int i,j,z;
-    assert(a->w >= 0);
-    assert(a->h >= 0);
-    assert(a->k >= 0);
-    ip_mat * out = ip_mat_create(a->h,a->w,a->k,0.0);
+    ip_mat *out;
+
+    if(a->h < 0 || a->w < 0 || a->k < 0)
+        exit(1);
+
+    out = ip_mat_create(a->h,a->w,a->k,0.0);
     for (i=0;i<a->h;i++) {
         for (j=0;j<a->w;j++) {
             for (z=0;z<a->k;z++) {
@@ -484,8 +484,12 @@ ip_mat * ip_mat_corrupt(ip_mat * a, float amount){
 ip_mat * ip_mat_blend(ip_mat * a, ip_mat * b, float alpha) {
     ip_mat *blend;
     unsigned int i, j, k;
-    assert(a->h==b->h && a->w==b->w && a->k==b->k);
+
+    if(a->h != b->h || a->w != b->w || a->k != b->k)
+        exit(1);
+
     blend=ip_mat_create(a->h, a->w, a->k, 0.0);
+
     for (i=0;i<a->h;i++) {
         for (j=0;j<a->w;j++) {
             for (k=0;k<a->k;k++) {
@@ -500,9 +504,10 @@ ip_mat * ip_mat_blend(ip_mat * a, ip_mat * b, float alpha) {
 /* DONE */
 void clamp(ip_mat * mat, float low, float high){
     unsigned int i,j,k;
-    assert(mat->w >= 0);
-    assert(mat->h >= 0);
-    assert(mat->k >= 0);
+    
+    if(mat->h < 0 || mat->w < 0 || mat->k < 0)
+        exit(1);
+
     for (i=0; i<mat->h; i++) {
         for (j=0; j<mat->w; j++){
             for(k=0; k<mat->k; k++){
@@ -521,9 +526,8 @@ void rescale(ip_mat * t, float new_max){
     float min;
     float max;
 
-    assert(t->w >= 0);
-    assert(t->h >= 0);
-    assert(t->k >= 0);
+    if(t->h < 0 || t->w < 0 || t->k < 0)
+        exit(1);
 
     compute_stats(t);
     min = t->stat->min;
@@ -544,13 +548,16 @@ void rescale(ip_mat * t, float new_max){
 ip_mat * ip_mat_convolve(ip_mat * a, ip_mat * f){
     unsigned int i, j, k, x, y;
     float sum;
-    assert(a->w >= 0);
-    assert(a->h >= 0);
-    assert(a->k >= 0);
-    ip_mat * new_ip_mat = ip_mat_create(a->h,a->w,a->k,0.0);
-    ip_mat * temp =(ip_mat_create(a->h+(f->h-1)/2, a->w+(f->w-1)/2, a->k, 0.));
+    ip_mat *new_ip_mat;
+    ip_mat *temp;
+
+    if(a->h < 0 || a->w < 0 || a->k < 0)
+        exit(1);
+
+    new_ip_mat = ip_mat_create(a->h,a->w,a->k,0.0);
+    temp =(ip_mat_create(a->h+(f->h-1)/2, a->w+(f->w-1)/2, a->k, 0.));
     temp = ip_mat_padding(a,(f->h-1)/2,(f->w-1)/2);
-    //Movimeto all'interno della matrice a
+
     for (i=0; i<(temp->h)-(f->h); i++){
         for (j=0; j<(temp->w)-(f->w); j++){
             for (k=0; k<temp->k; k++){
