@@ -258,9 +258,9 @@ ip_mat *  ip_mat_add_scalar(ip_mat *a, float c){
 
     new_ip_mat = ip_mat_create(a->h,a->w,a->k,0.0);
     
-    for(i=0;i<a->h;i++){
-        for(j=0;j<a->w;j++){
-            for(z=0;z<a->k;z++){
+    for(i=0; i<a->h; i++){
+        for(j=0; j<a->w; j++){
+            for(z=0; z<a->k; z++){
                 new_ip_mat->data[i][j][z] = a->data[i][j][z] + c;
             }
         }
@@ -315,13 +315,14 @@ ip_mat * ip_mat_subset(ip_mat * t, unsigned int row_start, unsigned int row_end,
     
     new_ip_mat = ip_mat_create((row_end-row_start+1), (col_end-col_start+1), t->k, 0.0);
 
-    for (i=row_start;i<row_end;i++) {
-        for (j=col_start;j<col_end;j++) {
+    for (i=row_start-1;i<=row_end-1;i++) {
+        for (j=col_start-1;j<=col_end-1;j++) {
             for (k=0;k<new_ip_mat->k;k++) {
-                new_ip_mat->data[i][j][k]=t->data[i][j][k];
+                new_ip_mat->data[i][j][k] = t->data[i][j][k];
             }
         }
     }
+    
     compute_stats(new_ip_mat);
     return new_ip_mat;
 }
