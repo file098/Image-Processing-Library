@@ -5,3 +5,4 @@ bmp.o
 ip_lib.o
 main.o
 test
+.DS_Store

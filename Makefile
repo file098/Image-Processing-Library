@@ -8,9 +8,5 @@ ip_lib.o: ip_lib.c ip_lib.h bmp.h
 main_iplib.o: main_iplib.c bmp.h ip_lib.h
 	gcc -Wall --ansi --pedantic -std=gnu89 -c main_iplib.c -o main_iplib.o
 
-
 clean:
-	rm main_iplib.o ip_lib.o bmp.o
-
-
-
+	rm main_iplib.o ip_lib.o bmp.o main_iplib

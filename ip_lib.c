@@ -2,6 +2,14 @@
  Created by Sebastiano Vascon on 23/03/20.
 */
 
+/*
+ 73
+ Michelle Ravagnan 881493	
+ Filippo Di Gennaro	882795
+ Michele Spolaor 876963	
+ Nicola	Longhi 882020
+*/
+
 #include <assert.h>
 #include <stdio.h>
 #include "ip_lib.h"
@@ -102,7 +110,7 @@ float get_normal_random(float media, float std){
     return media + num*std;
 }
 
-/*DONE*/
+
 ip_mat * ip_mat_create(unsigned int h, unsigned int w,unsigned  int k, float v) {
     ip_mat *new_ip_mat;
     unsigned int i,j,p;
@@ -134,7 +142,7 @@ ip_mat * ip_mat_create(unsigned int h, unsigned int w,unsigned  int k, float v) 
     return new_ip_mat;
 }
 
-/*DONE*/
+
 void ip_mat_free(ip_mat *a){
     unsigned int i, j;
     assert(a);
@@ -149,7 +157,7 @@ void ip_mat_free(ip_mat *a){
     free(a);
 }
 
-/* DONE */
+
 void compute_stats(ip_mat * t) {
     unsigned int i,j,z;
     float count = 0.0;
@@ -182,7 +190,7 @@ void compute_stats(ip_mat * t) {
     t->stat->mean = tot;
 }
 
-/* DONE */
+
 ip_mat * ip_mat_sum(ip_mat * a, ip_mat * b){
     ip_mat *new_ip_mat;
     unsigned int i,j,z;
@@ -203,7 +211,8 @@ ip_mat * ip_mat_sum(ip_mat * a, ip_mat * b){
     }
     return new_ip_mat;
 }
-/*DONE*/
+
+
 ip_mat * ip_mat_sub(ip_mat * a, ip_mat * b){
     ip_mat *new_ip_mat;
     unsigned int i,j,z;
@@ -224,9 +233,8 @@ ip_mat * ip_mat_sub(ip_mat * a, ip_mat * b){
     }
     return new_ip_mat;
 }
-/*DONE*/
-/* Moltiplica un ip_mat per uno scalare c. Si moltiplica c per tutti gli elementi di "a"
- * e si salva il risultato in un nuovo tensore in output. */
+
+
 ip_mat * ip_mat_mul_scalar(ip_mat *a, float c){
     ip_mat *new_ip_mat;
     unsigned int i,j,z;
@@ -247,8 +255,7 @@ ip_mat * ip_mat_mul_scalar(ip_mat *a, float c){
     return new_ip_mat;
 }
 
-/* DONE */
-/* Aggiunge ad un ip_mat uno scalare c e lo restituisce in un nuovo tensore in output. */
+
 ip_mat *  ip_mat_add_scalar(ip_mat *a, float c){
     ip_mat *new_ip_mat; 
     unsigned int i,j,z;
@@ -269,8 +276,7 @@ ip_mat *  ip_mat_add_scalar(ip_mat *a, float c){
     return new_ip_mat;
 }
 
-/* DONE */
-/* Calcola la media di due ip_mat a e b e la restituisce in output.*/
+
 ip_mat * ip_mat_mean(ip_mat * a, ip_mat * b){
     unsigned int i,j,z;
     ip_mat *new_ip_mat;
@@ -292,7 +298,7 @@ ip_mat * ip_mat_mean(ip_mat * a, ip_mat * b){
     return new_ip_mat;
 }
 
-/*DONE*/
+
 void ip_mat_init_random(ip_mat * t, float mean, float var){
     unsigned int i, j, k;
     for (i=0;i<t->h; i++) {
@@ -305,7 +311,7 @@ void ip_mat_init_random(ip_mat * t, float mean, float var){
     compute_stats(t);
 }
 
-/* DONE */
+
 ip_mat * ip_mat_subset(ip_mat * t, unsigned int row_start, unsigned int row_end, unsigned int col_start, unsigned int col_end) {
     unsigned int i,j,k;
     ip_mat *new_ip_mat;
@@ -327,7 +333,7 @@ ip_mat * ip_mat_subset(ip_mat * t, unsigned int row_start, unsigned int row_end,
     return new_ip_mat;
 }
 
-/*DONE*/
+
 ip_mat * ip_mat_copy(ip_mat * in){
     unsigned int i,j,z;
     ip_mat *new_ip_mat;
@@ -346,7 +352,7 @@ ip_mat * ip_mat_copy(ip_mat * in){
     return new_ip_mat;
 }
 
-/*DONE*/
+
 ip_mat * ip_mat_concat(ip_mat * a, ip_mat * b, int dimensione){
     ip_mat *out = NULL;
     unsigned int i, j, k;
@@ -423,7 +429,7 @@ ip_mat * ip_mat_concat(ip_mat * a, ip_mat * b, int dimensione){
     return out;
 }
 
-/*DONE*/
+
 ip_mat * ip_mat_to_gray_scale(ip_mat * in) {
     unsigned int i, j, z;
     float mean;
@@ -450,7 +456,7 @@ ip_mat * ip_mat_to_gray_scale(ip_mat * in) {
     return new_ip_mat;
 }
 
-/*DONE*/
+
 ip_mat * ip_mat_brighten(ip_mat * a, float bright){
     ip_mat *new_ip_mat;
 
@@ -461,7 +467,7 @@ ip_mat * ip_mat_brighten(ip_mat * a, float bright){
     return new_ip_mat;
 }
 
-/* DONE */
+
 ip_mat * ip_mat_corrupt(ip_mat * a, float amount){
     unsigned int i,j,z;
     ip_mat *out;
@@ -481,7 +487,7 @@ ip_mat * ip_mat_corrupt(ip_mat * a, float amount){
     return out;
 }
 
-/*DONE*/
+
 ip_mat * ip_mat_blend(ip_mat * a, ip_mat * b, float alpha) {
     ip_mat *blend;
     unsigned int i, j, k;
@@ -502,7 +508,7 @@ ip_mat * ip_mat_blend(ip_mat * a, ip_mat * b, float alpha) {
     return blend;
 }
 
-/* DONE */
+
 void clamp(ip_mat * mat, float low, float high){
     unsigned int i,j,k;
     
@@ -521,7 +527,7 @@ void clamp(ip_mat * mat, float low, float high){
     }
 }
 
-/* DONE */
+
 void rescale(ip_mat * t, float new_max){
     unsigned int i, j, k;
     float min;
@@ -545,7 +551,7 @@ void rescale(ip_mat * t, float new_max){
     compute_stats(t);
 }
 
-/* DONE */
+
 ip_mat * ip_mat_convolve(ip_mat * a, ip_mat * f){
     unsigned int i, j, k, x, y;
     float sum;
@@ -578,7 +584,7 @@ ip_mat * ip_mat_convolve(ip_mat * a, ip_mat * f){
     return new_ip_mat;
 }
 
-/*DONE*/
+
 ip_mat * ip_mat_padding(ip_mat * a, unsigned int pad_h, unsigned int pad_w){
     unsigned int i, j, k;
     ip_mat * new_ip_mat = ip_mat_create(a->h + 2*pad_h, a->w + 2*pad_w, a->k, 0.0);
@@ -592,7 +598,7 @@ ip_mat * ip_mat_padding(ip_mat * a, unsigned int pad_h, unsigned int pad_w){
     return new_ip_mat;
 }
 
-/*DONE*/
+
 ip_mat * create_sharpen_filter(){
     int i;
     ip_mat * sharp = ip_mat_create(3,3,3,0.0);
@@ -608,7 +614,7 @@ ip_mat * create_sharpen_filter(){
     return sharp;
 }
 
-/* DONE */
+
 ip_mat * create_edge_filter(){
     int i;
     ip_mat * sharpen = ip_mat_create(3,3,3,-1.0);
@@ -619,7 +625,7 @@ ip_mat * create_edge_filter(){
     return sharpen;
 }
 
-/*DONE*/
+
 ip_mat * create_emboss_filter(){
     int i,k;
     float x;
@@ -644,7 +650,6 @@ ip_mat * create_emboss_filter(){
 }
 
 
-/*DONE*/
 ip_mat * create_average_filter(unsigned w, unsigned h, unsigned k){
     double c = 1.0/((w * h)*1.0);
     ip_mat * average_filter = ip_mat_create(w,h,k,c);
@@ -653,7 +658,6 @@ ip_mat * create_average_filter(unsigned w, unsigned h, unsigned k){
 }
 
 
-/* DONE */
 ip_mat * create_gaussian_filter(unsigned w, unsigned h, unsigned k, float sigma){
     ip_mat * gauss = ip_mat_create(w,h,k,0.0);
 
@@ -685,4 +689,3 @@ ip_mat * create_gaussian_filter(unsigned w, unsigned h, unsigned k, float sigma)
     compute_stats(gauss);
     return gauss;
 }
-

@@ -4,6 +4,14 @@
  Sebastiano Vascon
 */
 
+/*
+ 73
+ Michelle Ravagnan 881493	
+ Filippo Di Gennaro	882795
+ Michele Spolaor 876963	
+ Nicola	Longhi 882020
+*/
+
 #ifndef IP_LIB_H
 #define IP_LIB_H
 
